@@ -53,7 +53,7 @@ app.post("/jogos/novo", async (req,res)=>{
 
     const jogo = await Jogo.create(dadosJogo);
 
-    res.send("Usuário inserido sob o id: " + usuario.id);
+    res.send("Jogo inserido sob o id: " + jogo.id);
 })
 
 app.listen(8000);
