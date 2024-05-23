@@ -3,12 +3,17 @@ const conn = require("./db/conn");
 
 const Usuario = require("./models/Usuario");
 const Jogo = require("./models/Jogo");
-
 const express = require("express");
+const exphs = require("express-handlebars");
 
-
+// Instaciação do servidor:
 const app = express();
-app.use(bodyParser.urlencoded({ extended: true }));
+
+// Vinculação do Handlebars ao Express:
+app.engine("handlebars", exphs.engine());
+app.set("view engine", "handlebars");
+
+// Configurações no express para facilitar a captura de dados recebidos do formulários
 
 
 app.use(
@@ -18,8 +23,19 @@ app.use(
 )
 app.use(express.json());
 
-app.get("/usuarios/novo", (req,res)=>{
-    res.sendFile(`${__dirname}/views/formUsuario.html`);
+app.get("/", (req,res) => {
+    res.render("home");
+});
+
+app.get("/usuarios", async (req,res) => {
+
+    const usuarios = await Usuario.findAll({ raw: true });
+
+    res.render("usuarios", {usuarios});
+});
+
+app.get("/usuarios/novo", (req,res) => {
+    res.render("formUsuario");
 });
 
 app.post("/usuarios/novo", async (req,res)=>{
