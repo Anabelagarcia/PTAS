@@ -38,6 +38,17 @@ app.get("/usuarios/novo", (req,res) => {
     res.render("formUsuario");
 });
 
+app.get("/usuarios/:id/update", async (req, res) =>{
+const id = parseInt(req.params.id);
+const usuario = await Usuario.findAll.findByPk(id, { raw: true });
+
+res.render("formUsuario", { usuario });
+// const usuario = Usuario.findOne({
+// where: { id: id },
+// raw: true,
+// });
+});
+
 app.post("/usuarios/novo", async (req,res)=>{
     const nickname = req.body.nickname;
     const nome = req.body.nome;
