@@ -28,12 +28,20 @@ app.get("/", (req, res) => {
 
 app.get("/usuarios", async (req, res) => {
   const usuarios = await Usuario.findAll({ raw: true });
-
   res.render("usuarios", { usuarios });
+});
+
+app.get("/jogos", async (req, res) => {
+  const jogos = await Jogo.findAll({ raw: true });
+  res.render("jogos", { jogos });
 });
 
 app.get("/usuarios/novo", (req, res) => {
   res.render("formUsuario");
+});
+
+app.get("/jogos/novo", (req, res) => {
+  res.render("formJogo");
 });
 
 app.get("/usuarios/:id/update", async (req, res) => {
@@ -43,6 +51,17 @@ app.get("/usuarios/:id/update", async (req, res) => {
   res.render("formUsuario", { usuario });
   // const usuario = Usuario.findOne({
   // where: { id: id },
+  // raw: true,
+  // });
+});
+
+app.get("/jogos/:id/update", async (req, res) => {
+  const titulo = parseInt(req.params.titulo);
+  const jogo = await Jogo.findAll.findByPk(titulo, { raw: true });
+
+  res.render("formJogo", { jogo });
+  // const jogo = Jogo.findOne({
+  // where: { titulo: titulo },
   // raw: true,
   // });
 });
@@ -61,8 +80,22 @@ app.post("/usuarios/novo", async (req, res) => {
   res.send("Usuário inserido sob o id: " + usuario.id);
 });
 
+app.post("/jogos/novo", async (req, res) => {
+  const titulo = req.body.titulo;
+  const descricao = req.body.descricao;
+
+  const dadosJogo = {
+    titulo,
+    descricao,
+  };
+
+  const jogo = await Jogo.create(dadosJogo);
+
+  res.send("Jogo inserido sob o id: " + jogo.id);
+});
+
 app.get("/jogos/novo", (req, res) => {
-  res.sendFile(`${__dirname}/views/formJogo.html`);
+  res.sendFile(`${__dirname}/views/formJogo.handlebars`);
 });
 
 app.post("/jogos/novo", async (req, res) => {
@@ -80,6 +113,8 @@ app.post("/jogos/novo", async (req, res) => {
 
   res.send("Jogo inserido sob o id: " + jogo.id);
 });
+
+
 
 app.post("/usuarios/:id/delete", (req, res) => {
   const id = parseInt(req.params.id);
