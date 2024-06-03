@@ -15,80 +15,93 @@ app.set("view engine", "handlebars");
 
 // Configurações no express para facilitar a captura de dados recebidos do formulários
 
-
 app.use(
-    express.urlencoded({
-        extended: true,
-    })
-)
+  express.urlencoded({
+    extended: true,
+  })
+);
 app.use(express.json());
 
-app.get("/", (req,res) => {
-    res.render("home");
+app.get("/", (req, res) => {
+  res.render("home");
 });
 
-app.get("/usuarios", async (req,res) => {
+app.get("/usuarios", async (req, res) => {
+  const usuarios = await Usuario.findAll({ raw: true });
 
-    const usuarios = await Usuario.findAll({ raw: true });
-
-    res.render("usuarios", {usuarios});
+  res.render("usuarios", { usuarios });
 });
 
-app.get("/usuarios/novo", (req,res) => {
-    res.render("formUsuario");
+app.get("/usuarios/novo", (req, res) => {
+  res.render("formUsuario");
 });
 
-app.get("/usuarios/:id/update", async (req, res) =>{
-const id = parseInt(req.params.id);
-const usuario = await Usuario.findAll.findByPk(id, { raw: true });
+app.get("/usuarios/:id/update", async (req, res) => {
+  const id = parseInt(req.params.id);
+  const usuario = await Usuario.findAll.findByPk(id, { raw: true });
 
-res.render("formUsuario", { usuario });
-// const usuario = Usuario.findOne({
-// where: { id: id },
-// raw: true,
-// });
+  res.render("formUsuario", { usuario });
+  // const usuario = Usuario.findOne({
+  // where: { id: id },
+  // raw: true,
+  // });
 });
 
-app.post("/usuarios/novo", async (req,res)=>{
-    const nickname = req.body.nickname;
-    const nome = req.body.nome;
+app.post("/usuarios/novo", async (req, res) => {
+  const nickname = req.body.nickname;
+  const nome = req.body.nome;
 
-    const dadosUsuario = {
-        nickname,
-        nome,
-    };
+  const dadosUsuario = {
+    nickname,
+    nome,
+  };
 
-    const usuario = await Usuario.create(dadosUsuario);
+  const usuario = await Usuario.create(dadosUsuario);
 
-    res.send("Usuário inserido sob o id: " + usuario.id);
-})
-
-app.get("/jogos/novo", (req,res)=>{
-    res.sendFile(`${__dirname}/views/formJogo.html`);
+  res.send("Usuário inserido sob o id: " + usuario.id);
 });
 
-app.post("/jogos/novo", async (req,res)=>{
-    const titulo = req.body.titulo;
-    const descricao = req.body.descricao;
-    const precobase = req.body.precobase;
+app.get("/jogos/novo", (req, res) => {
+  res.sendFile(`${__dirname}/views/formJogo.html`);
+});
 
-    const dadosJogo = {
-        titulo,
-        descricao,
-        precobase,
-    };
+app.post("/jogos/novo", async (req, res) => {
+  const titulo = req.body.titulo;
+  const descricao = req.body.descricao;
+  const precobase = req.body.precobase;
 
-    const jogo = await Jogo.create(dadosJogo);
+  const dadosJogo = {
+    titulo,
+    descricao,
+    precobase,
+  };
 
-    res.send("Jogo inserido sob o id: " + jogo.id);
-})
+  const jogo = await Jogo.create(dadosJogo);
 
-app.listen(8000);
+  res.send("Jogo inserido sob o id: " + jogo.id);
+});
+
+app.post("/usuarios/:id/delete", (req, res) => {
+  const id = parseInt(req.params.id);
+
+  const retorno = await Usuario.destroy({ where: { id: id } });
+
+  if (retorno > 0) {
+    res.redirect("/usuarios");
+  } else {
+    res.send("Erro ao excluir usuário");
+  }
+});
+
+app.listen(8000, () => {
+  console.log("Server rodando!");
+});
 
 conn
-    .sync()
-    .then( () => {
-        console.log("Conectado e sincronizado!");
-    }).catch( (err) => {
-        console.log("Ocorreu um erro: " + err);
-    })
+  .sync()
+  .then(() => {
+    console.log("Conectado e sincronizado!");
+  })
+  .catch((err) => {
+    console.log("Ocorreu um erro: " + err);
+  });
