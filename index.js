@@ -116,15 +116,15 @@ app.post("/jogos/novo", async (req, res) => {
 
 
 
-app.post("/usuarios/:id/delete", (req, res) => {
+app.post("/usuarios/:id/delete", async (req, res) => {
   const id = parseInt(req.params.id);
 
-  const retorno = await Usuario.destroy({ where: { id: id } });
+  const retorno = await Usuario.destroy({where: {id: id }});
 
-  if (retorno > 0) {
-    res.redirect("/usuarios");
-  } else {
-    res.send("Erro ao excluir usuário");
+  if (retorno > 0){
+      res.redirect("/usuarios");
+  } else{
+      res.send("Erro ao deletar usuário");
   }
 });
 
