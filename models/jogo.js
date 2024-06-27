@@ -1,6 +1,7 @@
 const conn = require("../db/conn");
 const { DataTypes } = require("sequelize");
 
+
 const Jogo = conn.define("Jogo", {
     titulo: {
       type: DataTypes.STRING,
@@ -15,6 +16,11 @@ const Jogo = conn.define("Jogo", {
         required: true,
       },
   });
+
+  
+
+
    
 
 module.exports = Jogo;
+

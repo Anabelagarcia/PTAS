@@ -1,9 +1,9 @@
-{{#if usuario}}
+{{#if jogo}}
 <h1>Atualizar jogo</h1>
-<form action="/jogos/novo" method="post">
+<form action="/jogos/{{jogo.id}}/update" method="post">
 {{else}}
 <h1> Cadastrar Jogo</h1>
-    <form action="/jogos/{{jogo.titulo}}/update" method="post">
+    <form action="/jogos/novo" method="post">
   {{/if}}
 
   <div>

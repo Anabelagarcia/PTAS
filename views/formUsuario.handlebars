@@ -1,10 +1,10 @@
 <!-- Definindo se é um form de atualização ou de cadastro -->
 {{#if usuario}}
   <h1>Atualizar usuário</h1>
-  <form action="/usuarios/novo" method="post">
+  <form action="/usuarios/{{usuario.id}}/update" method="post">
   {{else}}
     <h1> Cadastrar Usuário</h1>
-    <form action="/usuarios/{{usuario.id}}/update" method="post">
+    <form action="/usuarios/novo" method="post">
   {{/if}}
 
       <div>
